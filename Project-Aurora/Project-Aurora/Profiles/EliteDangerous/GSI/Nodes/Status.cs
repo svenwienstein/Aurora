@@ -35,6 +35,8 @@ namespace Aurora.Profiles.EliteDangerous.GSI.Nodes
         public const long HUD_DISCOVERY_MODE = 1 << 27;
         public const long NIGHT_VISION = 1 << 28;
         public const long ALTITUDE_FROM_AVERAGE_RADIUS = 1 << 29;
+        public const long FSD_JUMP = 1 << 30;
+        public const long SRV_HIGH_BEAM = 1 << 31;
 
         public static bool IsFlagSet(long bitmask, long flag)
         {
