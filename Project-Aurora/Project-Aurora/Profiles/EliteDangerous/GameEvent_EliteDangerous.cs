@@ -206,13 +206,13 @@ namespace Aurora.Profiles.EliteDangerous
         {
             if (File.Exists(EliteConfig.BINDINGS_PRESET_FILE))
             {
-                string currentBindPrefix = File.ReadAllText(EliteConfig.BINDINGS_PRESET_FILE).Trim();
+                string currentBindPrefix = SelectBindPrefix(EliteConfig.BINDINGS_PRESET_FILE);
                 currentBindFile = SearchForBindsFile(EliteConfig.BINDINGS_DIR, currentBindPrefix);
 
                 if (currentBindFile == null)
                 {
                     Global.logger.Error("Custom binds not found. Should check default directory.");
-                    string currentGamePath = ((EliteDangerousSettings) Application.Settings).GamePath;
+                    string currentGamePath = ((EliteDangerousSettings)Application.Settings).GamePath;
                     string defaultBindsDirectory;
 
                     defaultBindsDirectory = GetDefaultBindsDirectoryFromGamePath(currentGamePath);
@@ -226,14 +226,14 @@ namespace Aurora.Profiles.EliteDangerous
                         Process active = GetActiveProcess();
                         currentGamePath = active.MainModule?.FileName;
                         defaultBindsDirectory = GetDefaultBindsDirectoryFromGamePath(currentGamePath);
-                        
+
                         Global.logger.Info("Game process path: " + currentGamePath);
                         Global.logger.Info("Directory from process path: " + defaultBindsDirectory);
                     }
 
                     if (defaultBindsDirectory != null)
                     {
-                        ((EliteDangerousSettings) Application.Settings).GamePath = currentGamePath;
+                        ((EliteDangerousSettings)Application.Settings).GamePath = currentGamePath;
                         currentBindFile = SearchForBindsFile(defaultBindsDirectory, currentBindPrefix);
                         if (currentBindFile != null)
                         {
@@ -251,6 +251,16 @@ namespace Aurora.Profiles.EliteDangerous
                     Global.logger.Error("Binds not found: " + currentBindPrefix);
                 }
             }
+        }
+
+        private static string SelectBindPrefix(string presetFile)
+        {
+            var prefixes= File.ReadAllText(presetFile)?.Trim()?.Split((Char)10);
+            if (prefixes.Length == 0)
+            {
+                return "Custom";
+            }
+            return prefixes[(int)EliteConfig.StartPresets.General];
         }
 
         private string GetDefaultBindsDirectoryFromGamePath(string gamePath)
